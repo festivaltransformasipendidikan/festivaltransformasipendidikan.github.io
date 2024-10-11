@@ -1,50 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Festivak Transformasi Pendidikan</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co.com/tmK6GSZ/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://i.ibb.co.com/F7TzwCP/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co.com/D70CCD8/favicon-16x16.png">
-  <meta name="msapplication-TileColor" content="#224679">
-  <meta name="theme-color" content="#ffffff">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-  <!-- Memuat html2canvas -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-
-  <!-- Manifest in a <script> block -->
-  <link
-    rel="manifest"
-    href="data:application/manifest+json,{'name':'Simple PWA','short_name':'PWA','start_url':'/ftp.php','display':'standalone','background_color':'#ffffff','theme_color':'#000000','icons':[{'src':'https://via.placeholder.com/192','sizes':'192x192','type':'image/png'},{'src':'https://via.placeholder.com/512','sizes':'512x512','type':'image/png'}]}" />
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      /* Atur ukuran font untuk seluruh teks di body */
-      padding: 20px;
-      text-align: center;
-    }
-
-    helptext {
-      font-size: 9px;
-      color: #666;
-
-    }
-
-    h1 {
-      color: #333;
-    }
-  </style>
-
-  <script>
-    $(document).ready(function() {
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Festival Transformasi Pendidikan</title><link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co.com/tmK6GSZ/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://i.ibb.co.com/F7TzwCP/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co.com/D70CCD8/favicon-16x16.png"><meta name="msapplication-TileColor" content="#224679"><meta name="theme-color" content="#ffffff"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><link rel="manifest" href="data:application/manifest+json,{'name':'Simple PWA','short_name':'PWA','start_url':'/ftp.php','display':'standalone','background_color':'#ffffff','theme_color':'#000000','icons':[{'src':'https://via.placeholder.com/192','sizes':'192x192','type':'image/png'},{'src':'https://via.placeholder.com/512','sizes':'512x512','type':'image/png'}]}"><style>body{font-family:Arial,sans-serif;font-size:14px;padding:20px;text-align:center}helptext{font-size:9px;color:#666}h1{color:#333}</style><script>$(document).ready(function() {
 
       $(document).on("contextmenu", function(event) {
         event.preventDefault(); // Mencegah menu konteks muncul
@@ -58,6 +12,7 @@
       // Tampilkan step pertama saat halaman dimuat
       showStep();
 
+      // Event listener untuk tombol kembali
       $('#boardingPassButton').on('click', function() {
         // Ambil elemen yang ingin diubah menjadi gambar (boarding pass)
         var boardingPass = $('.cetakboardingpass')[0]; // Ambil elemen sebagai DOM
@@ -84,6 +39,87 @@
           },
         })
       }
+
+      // Fungsi untuk mendapatkan data tema menggunakan fetch
+      function getTema() {
+        const url = 'https://script.google.com/macros/s/AKfycbwvEuVg0otuL2zIRtqPYl6qrvBMF6pAG_PmUSrJ7Ow6jDuijCj8K0-2I55QlLxqZ8DDHA/exec?type=tema';
+
+        // Menggunakan fetch dengan metode GET
+        return fetch(url, {
+            redirect: "follow",
+            method: "GET",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8", // Header sesuai permintaan
+            },
+          })
+          .then(response => response.json()) // Parsing response menjadi JSON
+          .then(data => data.temaData) // Mengembalikan data tema
+          .catch(error => {
+            console.error('Error:', error);
+            swal('Terjadi Kesalahan', 'Gagal mengambil data tema.', 'error');
+            return []; // Kembalikan array kosong jika terjadi error
+          });
+      }
+
+      // Event listener menggunakan jQuery untuk select change
+      $('#additionalSelect').on('change', function() {
+        const selectedTema = $(this).val(); // Mendapatkan tema yang dipilih
+
+        // Tampilkan swal loading saat memuat data getTema
+        swal({
+          title: 'Memeriksa Tema',
+          text: 'Sedang menghitung kuota tema, harap tunggu...',
+          icon: 'info',
+          buttons: false, // Tidak ada tombol saat loading
+          closeOnClickOutside: false, // Tidak bisa ditutup dengan klik di luar
+          closeOnEsc: false, // Tidak bisa ditutup dengan Esc
+        });
+
+        // Ambil data tema dari API
+        // Ambil data tema dari API
+        getTema().then(function(temaData) {
+          // Tutup swal loading setelah data diterima
+          swal.close();
+
+          // Cek apakah tema yang dipilih ada di dalam temaData dan apakah total peserta melebihi 300
+          const tema = temaData.find(t => t.tema === selectedTema);
+
+          if (tema && tema.total >= 300) {
+            // Jika total melebihi 300, sembunyikan opsi dan tampilkan pesan
+            swal({
+              icon: 'warning',
+              title: 'Tema Melebihi Batas',
+              text: 'Tema yang Anda pilih sudah melebihi batas peserta. Silakan pilih tema yang lain.',
+              buttons: true,
+              dangerMode: true,
+            }).then((willReset) => {
+              if (willReset) {
+                // Sembunyikan opsi yang dipilih
+                $('#additionalSelect option[value="' + selectedTema + '"]').hide();
+                // Kembalikan ke opsi default "Pilih salah satu"
+                $('#additionalSelect').val(''); // Reset pilihan
+              }
+            });
+          } else {
+            // Jika tema masih tersedia (kurang dari 300), tampilkan swal sukses
+            swal({
+              icon: 'success',
+              title: 'Tema Tersedia',
+              text: 'Tema yang Anda pilih masih memiliki sisa kuota. Segera daftar!',
+              buttons: true,
+            });
+          }
+
+        }).catch(function(error) {
+          // Jika terjadi kesalahan, tutup swal loading dan tampilkan pesan error
+          swal.close();
+          swal({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            text: 'Gagal memuat data tema, silakan coba lagi.',
+          });
+        });
+      });
 
       // Fungsi untuk menampilkan langkah tertentu dan memperbarui stepper
       function showStep() {
@@ -120,7 +156,6 @@
           );
         }
       }
-
 
       // Fungsi untuk menampilkan data pengguna di halaman (Step 2)
       function displayUserData(userData) {
@@ -232,6 +267,7 @@
         $("#regsubTema").val(subTema || "Inputan otomatis dari sistem");
       }
 
+      // Fungsi untuk menghapus data registrasi di halaman (Step 2)
       function unggahNaskah() {
         // Ambil nilai dari input field
         const NUPTK = $("#regnuptk").val();
@@ -964,605 +1000,46 @@
         }
       });
 
-    });
-  </script>
+    });</script><script type="module">// Import the functions you need from the SDKs you need
 
-  <style>
-    /* Stepper container */
-    #stepper {
-      display: flex;
-      /* Mengatur elemen anak agar berada dalam satu baris */
-      justify-content: center;
-      /* Memusatkan elemen */
-      list-style-type: none;
-      /* Menghilangkan bullet points */
-      padding: 0;
-    }
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 
-    /* Stepper items */
-    #stepper .nav-item {
-      margin: 2px;
-      /* Memberikan jarak antar elemen */
-    }
+    import {
+      getAnalytics
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
 
-    /* Style untuk tautan stepper */
-    #stepper .nav-link {
-      display: inline-flex;
-      /* Agar ikon dan teks berada dalam satu baris */
-      align-items: center;
-      /* Mengatur ikon dan teks sejajar secara vertikal */
-      padding: 5px 10px;
-      border-radius: 5px;
-      background-color: #007bff;
-      /* Warna latar belakang */
-      color: white;
-      text-decoration: none;
-    }
+    // TODO: Add SDKs for Firebase products that you want to use
 
-    /* Menyesuaikan ukuran ikon */
-    #stepper .nav-link svg {
-      margin-right: 2px;
-      /* Memberikan jarak antara ikon dan teks */
-    }
+    // https://firebase.google.com/docs/web/setup#available-libraries
 
-    /* Style untuk tautan yang disabled */
-    #stepper .nav-link.disabled {
-      background-color: #6c757d;
-      cursor: not-allowed;
-    }
 
-    /* Style untuk tautan stepper */
-    #stepper .nav-link {
-      display: inline-flex;
-      align-items: center;
-      padding: 10px 20px;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      font-size: 9px;
-      /* Ukuran font diperkecil */
-    }
+    // Your web app's Firebase configuration
 
-    /* Menyesuaikan ukuran ikon */
-    #stepper .nav-link svg {
-      margin-right: 8px;
-      width: 14px;
-      /* Ukuran ikon diperkecil */
-      height: 14px;
-      /* Ukuran ikon diperkecil */
-    }
-  </style>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-</head>
+    const firebaseConfig = {
 
-<body class="bg-primary">
+      apiKey: "AIzaSyDeS5BadrSYII-myCE2ff1Zaj7lYTd2Jxo",
 
-  <!-- HTML -->
-  <div class="header-container container mb-3">
+      authDomain: "festivaltransformasipendidikan.firebaseapp.com",
 
-    <!-- Gambar di kiri -->
-    <a target="_blank" href="https://bbgpjateng.kemdikbud.go.id/">
-      <img src="https://i.ibb.co.com/xf7zM5g/TULISAN-BBGP-3-1.png" width="45%" alt="bbgpjateng" border="0">
-    </a>
+      projectId: "festivaltransformasipendidikan",
 
-    <!-- Teks di kanan -->
-    <div class="mt-3">
-      <span class="text-white">Hai kak, </span><span class="fw-bold uname text-white">Selamat datang</span>
-    </div>
-  </div>
-  </div>
+      storageBucket: "festivaltransformasipendidikan.appspot.com",
 
-  <div class="container p-5 bg-light rounded shadow forma">
-    <h1 class="mb-4 fw-bold h3 text-dark">Festival Transformasi Pendidikan</h1>
+      messagingSenderId: "656801924157",
 
-    <input type="text" id="kodeKegiatanInput" hidden>
+      appId: "1:656801924157:web:699c202614dc0658599654",
 
-    <!-- Stepper -->
-    <ul class="nav nav-pills mb-4" id="stepper">
-      <li class="nav-item">
-        <a class=" nav-link active fw-bold text-white" id="step1Link">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
-            <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708" />
-          </svg>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled fw-bold text-white h6" id="step2Link" href="#" tabindex="-1" aria-disabled="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-badge-fill" viewBox="0 0 16 16">
-            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z" />
-          </svg>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled fw-bold text-white" id="step3Link" href="#" tabindex="-1" aria-disabled="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-dash-fill" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6 6a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1z" />
-          </svg>
-        </a>
-      </li>
-    </ul>
+      measurementId: "G-CD00CT495M"
 
-    <!-- Step 1: Input NUPTK -->
-    <div id="step1">
-      <label for="NUPTK" class="form-label ">Masukkan ID Pendaftaran (NUPTK/NIK)</label>
+    };
 
-      <!-- Input group for NUPTK with floating label -->
-      <div class="form-floating mb-3">
-        <input type="text" inputmode="numeric" id="NUPTK" required class="form-control" placeholder="NUPTK" />
-        <label for="NUPTK">NUPTK</label> <!-- Floating label -->
-        <div class="input-group-append mt-2">
-          <div class="d-grid gap-2">
-            <button id="checkButton" class="btn btn-primary gradient-button fw-bold" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
-                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708" />
-              </svg> Verifikasi
-            </button>
-          </div>
-        </div>
-        <small class="mt-5 text-muted">Jika tidak punya NUPTK bisa menggunakan NIK</small>
-      </div>
 
-      <p id="message" class="mt-3"></p>
-      <div id="loading" class="text-muted mt-2"></div>
-    </div>
+    // Initialize Firebase
 
-    <!-- Step 2: Tampilkan data pengguna dalam bentuk input -->
-    <div id="step2" class="hidden text-left" style="display: none">
+    const app = initializeApp(firebaseConfig);
 
-      <!-- <label for="nameInput" class="form-label">Nama Lengkap</label> -->
-      <!-- Input Nama (non-editable) -->
-      <div class="mb-3 input-group">
-        <span class="input-group-text" style="text-align: left;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-          </svg> <!-- Icon Nama -->
-        </span>
-        <input type="text" id="nameInput" class="form-control non-editable" style="text-align: left;" disabled placeholder="Nama tidak bisa diedit">
-      </div>
-
-      <!-- <p for="NUPTK" class="form-label">Peran</p> -->
-      <!-- Input Peran (non-editable) -->
-      <div class="mb-3 input-group">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-workspace" viewBox="0 0 16 16">
-            <path d="M4 16s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-5.95a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-            <path d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.4 5.4 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2z" />
-          </svg> <!-- Icon Peran -->
-        </span>
-        <input type="text" id="generationInput" class="form-control non-editable" disabled placeholder="Peran">
-      </div>
-
-      <hr>
-
-      <!-- <p for="NUPTK" class="text-left form-label">Jabatan</p> -->
-      <!-- Input Jabatan (editable) -->
-      <div class="mb-3 input-group">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
-            <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5" />
-            <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85z" />
-          </svg> <!-- Icon Jabatan -->
-        </span>
-        <select id="positionInput" class="form-select editable">
-          <option value="" disabled selected>Pilih Jabatan Anda</option>
-          <option value="Guru">Guru</option>
-          <option value="Kepala Sekolah">Kepala Sekolah</option>
-          <option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option>
-          <option value="Pengawas Sekolah">Pengawas Sekolah</option>
-          <option value="Tenaga Pendidik Lainnya">Tenaga Pendidik Lainnya</option>
-        </select>
-        <small class="ml-3 mt-1 help-text helptext">Pilih jabatan sesuai posisi saat ini.</small>
-      </div>
-
-
-      <!-- <p for="NUPTK" class="form-label mt-3">Instansi</p> -->
-      <!-- Input Instansi (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings-fill" viewBox="0 0 16 16">
-            <path d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zM2 11h1v1H2zm2 0h1v1H4zm-1 2v1H2v-1zm1 0h1v1H4zm9-10v1h-1V3zM8 5h1v1H8zm1 2v1H8V7zM8 9h1v1H8zm2 0h1v1h-1zm-1 2v1H8v-1zm1 0h1v1h-1zm3-2v1h-1V9zm-1 2h1v1h-1zm-2-4h1v1h-1zm3 0v1h-1V7zm-2-2v1h-1V5zm1 0h1v1h-1z" />
-          </svg> <!-- Icon Instansi -->
-        </span>
-        <input type="text" id="institutionInput" class="form-control editable" placeholder="Isi instansi Anda">
-        <small class="ml-3 mt-1 help-text">Pastikan instansi sesuai tempat bekerja saat ini.</small>
-      </div>
-
-
-      <!-- <p for="schoolLevelInput" class="form-label mt-3">Jenjang</p> -->
-      <!-- Input Jenjang Sekolah (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
-            <path d="M13.5.5a.5.5 0 0 1 .5.5v14a.5.5 0 0 1-1 0V13h-2v2a.5.5 0 0 1-1 0v-2H6v2a.5.5 0 0 1-1 0v-2H3v2a.5.5 0 0 1-1 0v-14a.5.5 0 0 1 .5-.5h11ZM2 1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2Zm1 10v3h2v-3H3Zm0-1h2V7H3v3Zm3 0h2V7H6v3Zm0 1v3h2v-3H6Zm3 0v3h2v-3H9Zm0-1h2V7H9v3Zm3 0v3h2v-3h-2Zm0-1h2V7h-2v3ZM3 6h2V4H3v2Zm3 0h2V4H6v2Zm3 0h2V4H9v2Zm3 0h2V4h-2v2ZM3 3h2V2H3v1Zm3 0h2V2H6v1Zm3 0h2V2H9v1Zm3 0h2V2h-2v1Z" />
-          </svg> <!-- Icon Building (School) -->
-        </span>
-        <input type="text" id="schoolLevelInput" class="form-control editable" placeholder="Pilih Jenjang Sekolah" list="schoolLevelList">
-        <small class="ml-3 mt-1 help-text">Pastikan jenjang sesuai tempat bekerja saat ini.</small>
-      </div>
-
-
-      <!-- Datalist for Autocomplete -->
-      <datalist id="schoolLevelList">
-        <option value="Taman Kanak-Kanak (TK)">
-        <option value="Sekolah Dasar (SD)">
-        <option value="Sekolah Menengah Pertama (SMP)">
-        <option value="Sekolah Menengah Atas (SMA)">
-        <option value="Sekolah Menengah Kejuruan (SMK)">
-        <option value="Madrasah Ibtidaiyah (MI)">
-        <option value="Madrasah Tsanawiyah (MTs)">
-        <option value="Madrasah Aliyah (MA)">
-        <option value="Pendidikan Anak Usia Dini (PAUD)">
-        <option value="Sekolah Luar Biasa (SLB)">
-        <option value="Perguruan Tinggi">
-      </datalist>
-
-      <!-- <p for="NUPTK" class="form-label mt-3">Kabupaten</p> -->
-      <!-- Input Kabupaten (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-          </svg> <!-- Icon Kabupaten -->
-        </span>
-        <input type="text" id="districtInput" class="form-control editable" placeholder="Isi kabupaten Anda">
-        <small class="ml-3 mt-1 help-text">Pastikan kab/kota sesuai wilayah kerja saat ini.</small>
-      </div>
-
-
-
-      <!-- <p for="NUPTK" class="form-label mt-3">Nomor WhatsApp</p> -->
-      <!-- Input Nomor WhatsApp (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
-            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
-          </svg> <!-- Icon WhatsApp -->
-        </span>
-        <input type="text" inputmode="numeric" id="whatsappInput" class="form-control editable" placeholder="0821xxxxxx">
-      </div>
-
-      <hr>
-
-      <!-- <p for="bankNameInput" class="form-label mt-3">Nama Bank</p> -->
-      <!-- Input Nama Bank (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bank2" viewBox="0 0 16 16">
-            <path d="M8.277.084a.5.5 0 0 0-.554 0l-7.5 5A.5.5 0 0 0 .5 6h1.875v7H1.5a.5.5 0 0 0 0 1h13a.5.5 0 1 0 0-1h-.875V6H15.5a.5.5 0 0 0 .277-.916zM12.375 6v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zm-2.5 0v7h-1.25V6zM8 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2M.5 15a.5.5 0 0 0 0 1h15a.5.5 0 1 0 0-1z" />
-          </svg> <!-- Icon Bank -->
-        </span>
-        <input type="text" id="bankNameInput" class="form-control editable" placeholder="Nama Bank Anda" list="bankList">
-        <small class="ml-3 mt-1 help-text">Isi dengan nama bank sesuai rekening Anda.</small>
-      </div>
-
-      <!-- Datalist for Autocomplete -->
-      <datalist id="bankList">
-        <option value="Bank Negara Indonesia (BNI)">
-        <option value="Bank Rakyat Indonesia (BRI)">
-        <option value="Bank Mandiri">
-        <option value="Bank Tabungan Negara (BTN)">
-        <option value="Bank Syariah Indonesia (BSI)">
-        <option value="Bank Jateng">
-        <option value="Bank BPR">
-        <option value="Bank Central Asia (BCA)">
-        <option value="Bank CIMB Niaga">
-        <option value="Bank Danamon">
-        <option value="Bank Permata">
-        <option value="Bank Panin">
-        <option value="Bank Mega">
-        <option value="Bank OCBC NISP">
-        <option value="Bank Maybank Indonesia">
-        <option value="Bank Sinarmas">
-        <option value="Bank Muamalat">
-        <option value="Bank Bukopin">
-      </datalist>
-
-      <!-- <p for="NUPTK" class="form-label mt-3">Nomor Rekening</p> -->
-      <!-- Input Nomor Rekening (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wallet-fill" viewBox="0 0 16 16">
-            <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v2h6a.5.5 0 0 1 .5.5c0 .253.08.644.306.958.207.288.557.542 1.194.542s.987-.254 1.194-.542C9.42 6.644 9.5 6.253 9.5 6a.5.5 0 0 1 .5-.5h6v-2A1.5 1.5 0 0 0 14.5 2z" />
-            <path d="M16 6.5h-5.551a2.7 2.7 0 0 1-.443 1.042C9.613 8.088 8.963 8.5 8 8.5s-1.613-.412-2.006-.958A2.7 2.7 0 0 1 5.551 6.5H0v6A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5z" />
-          </svg> <!-- Icon Rekening -->
-        </span>
-        <input type="text" inputmode="numeric" id="accountNumberInput" class="form-control editable" placeholder="Nomor Rekening Anda">
-        <small class="ml-3 mt-1 help-text">Masukkan nomor rekening yang benar.</small>
-      </div>
-
-      <!-- <p for="NUPTK" class="form-label mt-3">Atas Nama Rekening</p> -->
-      <!-- Input Atas Nama Rekening (editable) -->
-      <div class="mb-3 input-group mt-3">
-        <span class="input-group-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-badge" viewBox="0 0 16 16">
-            <path d="M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-            <path d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492z" />
-          </svg> <!-- Icon Atas Nama Rekening -->
-        </span>
-        <input type="text" id="accountNameInput" class="form-control editable" placeholder="Nama Pemilik Rekening">
-        <small class="ml-3 mt-1 help-text">Nama pemilik rekening harus sesuai.</small>
-      </div>
-
-      <button id="nextButton" class="btn btn-primary mt-3 gradient-button fw-bold mt-3">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
-          <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
-        </svg> Lanjut ke Pilih Kegiatan
-      </button>
-    </div>
-
-    <!-- Step 3: Pilih kegiatan -->
-    <div id="step3" class="hidden" style="display: none">
-      <label for="activitySelect" class="form-label">Kegiatan yang akan kamu ikuti : </label>
-      <select id="activitySelect" class="form-select mb-3 editable">
-        <option value="" disabled selected>Pilih salah satu</option>
-        <!-- Opsi kegiatan akan diisi secara dinamis oleh JavaScript -->
-      </select>
-
-      <!-- Opsi tambahan yang akan muncul jika kegiatan tertentu dipilih -->
-      <div id="additionalOptions2" style="display: none;">
-        <label for="additionalSelect2" class="form-label mt-2">Kegiatan simposium atau seminar :</label>
-        <select id="additionalSelect2" class="form-select mb-3 editable">
-          <option value="" disabled selected>Pilih salah satu</option>
-          <option value="Simposium">Simposium</option>
-          <option value="Seminar">Seminar</option>
-        </select>
-      </div>
-
-      <!-- Opsi tambahan yang akan muncul jika kegiatan tertentu dipilih -->
-      <div id="additionalOptions" style="display: none;">
-        <label for="additionalSelect" class="form-label mt-2">Pilih tema Simposium :</label>
-        <select id="additionalSelect" class="form-select mb-3 editable">
-          <option value="" disabled selected>Pilih salah satu</option>
-          <option value="Kemampuan Literasi">Kemampuan Literasi</option>//jika sudah diisi 300 maka tidak pilih lagi ?
-          <option value="Kemampuan Numerasi">Kemampuan Numerasi</option>//jika sudah diisi 300 maka tidak pilih lagi ?
-          <option value="Karakter">Karakter</option>//jika sudah diisi 300 maka tidak pilih lagi
-          <option value="Iklim Keamanan Sekolah">Iklim Keamanan Sekolah</option>//jika sudah diisi 300 maka tidak pilih lagi
-          <option value="Iklim Kebhinekaan">Iklim Kebhinekaan</option>//jika sudah diisi 300 maka tidak pilih lagi
-          <option value="Kualitas Pembelajaran">Kualitas Pembelajaran</option>//jika sudah diisi 300 maka tidak pilih lagi
-        </select>
-      </div>
-
-      <button id="submitFormButton" class="btn btn-primary gradient-button fw-bold">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
-        </svg> Daftar sekarang
-      </button>
-    </div>
-
-  </div>
-
-  <div class="card bg-light text-white container formb" hidden>
-    <div class="card-body">
-      <div class="px-4 py-5 my-5 text-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="150"
-          height="150"
-          fill="green"
-          class="bi bi-check-circle-fill"
-          viewBox="0 0 16 16">
-          <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-        </svg>
-        <h1 class="display-5 fw-bold text-body-emphasis">
-          Kamu berhasil terdaftar!
-        </h1>
-        <div class="col-lg-6 mx-auto">
-          <p class="lead mb-4 text-dark">
-            Sampai jumpa di kegiatan pada acara puncak!
-          </p>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a href="https://wa.me/082143168886" target="_blank" type="button" class="btn fw-bold rounded-pill btn-primary px-4gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
-                <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
-              </svg> Narahubung
-            </a>
-            <a
-              type="button" target="_blank" href="mailto:bbgpjateng@kemdikbud.go.id"
-              class="btn rounded-pill fw-bold btn-outline-primary px-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
-              </svg> Email
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="formc" hidden>
-    <!-- Hero Section -->
-    <section class="text-white text-center py-5">
-      <div class="container">
-        <h1 class="display-6 text-white fw-bold">Resume Pendaftaran</h1>
-        <p class="lead">Terima kasih kakak telah mendaftar!. Festival Transformasi Pendidikan</p>
-      </div>
-    </section>
-
-    <div class="container cetakboardingpass bg-white p-5 rounded shadow">
-      <h1 class="mb-4 fw-bold">Status Pendaftaran</h1>
-      <p class="lead">Festival Transformasi Pendidikan BBGP Jawa Tengah.</p>
-
-      <center>
-        <div id="qrcode"></div>
-        <button class="btn btn-primary rounded-pill mt-3 fw-bold">
-          Status : Terdaftar
-        </button>
-      </center>
-
-      <hr>
-      <div class="mt-4">
-        <!-- Data Pendaftar -->
-        <h5 class="fw-bold">Data Pendaftar:</h5>
-        <p>Detail data kakak yang terdaftar.</p>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regnuptk" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regnuptk">NUPTK</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regnama" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regnama">Nama Lengkap</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regjabatan" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regjabatan">Jabatan</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="reginstansi" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="reginstansi">Instansi</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regkabupaten" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regkabupaten">Kabupaten</label>
-        </div>
-      </div>
-
-      <hr>
-      <div class="mt-4">
-        <h5 class="fw-bold">Detail Registrasi:</h5>
-        <p>Detail kegiatan yang kakak ikuti.</p>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regkodeKegiatan" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regkodeKegiatan">Kode Kegiatan</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <textarea id="regkegiatan" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." style="height: 100px;"></textarea>
-          <label for="regkegiatan">Kegiatan</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regsubKegiatan" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regsubKegiatan">Sub Kegiatan</label>
-        </div>
-
-        <div class="mb-3 form-floating">
-          <input type="text" id="regsubTema" class="form-control non-editable" disabled placeholder="Inputan otomatis anda tidak perlu mengisi.." />
-          <label for="regsubTema">Sub Tema</label>
-        </div>
-
-        <button id="boardingPassButton" class="btn btn-primary mt-3 gradient-button fw-bold mt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
-            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
-          </svg> Unduh Boarding Pass
-        </button>
-      </div>
-
-      <hr>
-      <div class="mt-4 formunggah" hidden>
-
-        <h5 class="fw-bold">Detail Naskah:</h5>
-        <p>Detail naskah yang kakak unggah.</p>
-
-        <!-- Input Judul Naskah -->
-        <div class="form-floating mb-3 mt-3">
-          <input type="text" id="judulnaskahInput" class="form-control editable" placeholder="Isi judul naskah anda">
-          <label for="judulnaskahInput">Judul Naskah</label>
-          <small class="mt-2 help-text">Judul naskah sesuai dengan tema dipilih.</small>
-
-        </div>
-
-        <!-- Input Link Google Drive Naskah -->
-        <div class="form-floating mb-3">
-          <input type="text" id="naskahInput" class="form-control editable" placeholder="Isi link google drive naskah anda">
-          <label for="naskahInput">Link Google Drive Naskah Mode View</label>
-          <button class="btn btn-outline-primary fw-bold mt-2" id="cekNaskahBtn">Cek Link Naskah</button>
-        </div>
-
-
-        <!-- Input Link Surat Pernyataan -->
-        <div class="form-floating mb-3">
-          <input type="text" id="suratInput" class="form-control editable" placeholder="Isi link google drive surat pernyataan anda">
-          <label for="suratInput">Link Google Drive Surat Pernyataan Mode View</label>
-          <button class="btn btn-outline-primary fw-bold mt-2 text-left" id="cekSuratBtn">Cek Link Surat</button>
-        </div>
-
-
-
-        <button id="unggahNaskahButton" class="btn btn-primary fw-bold mt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
-          </svg> Unggah Naskah
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <footer class="mt-5 text-center mb-5 text-white"> Balai Besar Guru Penggerak Jawa Tengah &copy; 2024 Festival Transformasi Pendidikan</footer>
-
-  <script>
-    // Register the Service Worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function() {
-        navigator.serviceWorker
-          .register(
-            "data:text/javascript," +
-            encodeURIComponent(`
-          const CACHE_NAME = 'pwa-cache-v1';
-          const urlsToCache = [
-            '/',
-            '/index.html'
-          ];
-
-          // Install Service Worker and cache files
-          self.addEventListener('install', function(event) {
-            event.waitUntil(
-              caches.open(CACHE_NAME).then(function(cache) {
-                return cache.addAll(urlsToCache);
-              })
-            );
-          });
-
-          // Fetch from cache
-          self.addEventListener('fetch', function(event) {
-            event.respondWith(
-              caches.match(event.request).then(function(response) {
-                return response || fetch(event.request);
-              })
-            );
-          });
-
-          // Activate new Service Worker and remove old caches
-          self.addEventListener('activate', function(event) {
-            var cacheWhitelist = [CACHE_NAME];
-            event.waitUntil(
-              caches.keys().then(function(cacheNames) {
-                return Promise.all(
-                  cacheNames.map(function(cacheName) {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                      return caches.delete(cacheName);
-                    }
-                  })
-                );
-              })
-            );
-          });
-        `), {
-              scope: "./"
-            }
-          )
-          .then(function(registration) {
-            console.log(
-              "ServiceWorker registration successful with scope: ",
-              registration.scope
-            );
-          })
-          .catch(function(err) {
-            console.log("ServiceWorker registration failed: ", err);
-          });
-      });
-    }
-  </script>
-</body>
-
-</html>
+    const analytics = getAnalytics(app);</script><style>#stepper{display:flex;justify-content:center;list-style-type:none;padding:0}#stepper .nav-item{margin:2px}#stepper .nav-link{display:inline-flex;align-items:center;padding:5px 10px;border-radius:5px;background-color:#007bff;color:#fff;text-decoration:none}#stepper .nav-link svg{margin-right:2px}#stepper .nav-link.disabled{background-color:#6c757d;cursor:not-allowed}#stepper .nav-link{display:inline-flex;align-items:center;padding:10px 20px;border-radius:5px;background-color:#007bff;color:#fff;text-decoration:none;font-size:9px}#stepper .nav-link svg{margin-right:8px;width:14px;height:14px}</style></head><body class="bg-primary"><div class="header-container container mb-3"><a target="_blank" href="https://bbgpjateng.kemdikbud.go.id/"><img src="https://i.ibb.co.com/xf7zM5g/TULISAN-BBGP-3-1.png" width="45%" alt="bbgpjateng" border="0"></a><div class="mt-3"><span class="text-white">Hai kak,</span><span class="fw-bold uname text-white">Selamat datang</span></div></div><div class="container p-5 bg-light rounded shadow forma"><h1 class="mb-4 fw-bold h3 text-dark">Festival Transformasi Pendidikan</h1><input type="text" id="kodeKegiatanInput" hidden><ul class="nav nav-pills mb-4" id="stepper"><li class="nav-item"><a class="nav-link active fw-bold text-white" id="step1Link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/></svg></a></li><li class="nav-item"><a class="nav-link disabled fw-bold text-white h6" id="step2Link" href="#" tabindex="-1" aria-disabled="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-badge-fill" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"/></svg></a></li><li class="nav-item"><a class="nav-link disabled fw-bold text-white" id="step3Link" href="#" tabindex="-1" aria-disabled="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-dash-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6 6a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1z"/></svg></a></li></ul><div id="step1"><label for="NUPTK" class="form-label">Masukkan ID Pendaftaran (NUPTK/NIK)</label><div class="form-floating mb-3"><input type="text" inputmode="numeric" id="NUPTK" required class="form-control" placeholder="NUPTK"><label for="NUPTK">NUPTK</label><div class="input-group-append mt-2"><div class="d-grid gap-2"><button id="checkButton" class="btn btn-primary gradient-button fw-bold" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/></svg>Verifikasi</button></div></div><small class="mt-5 text-muted">Jika tidak punya NUPTK bisa menggunakan NIK</small></div><p id="message" class="mt-3"></p><div id="loading" class="text-muted mt-2"></div></div><div id="step2" class="hidden text-left" style="display:none"><div class="form-floating mb-3"><input type="text" class="form-control" id="nameInput" placeholder="Nama Lengkap" disabled="disabled" value="Nama tidak bisa diedit"><label for="nameInput">Nama Lengkap</label></div><div class="form-floating mb-3"><input type="text" class="form-control" id="generationInput" placeholder="Peran" disabled="disabled" value="Peran"><label for="generationInput">Peran</label></div><hr><div class="form-floating mb-3"><select id="positionInput" class="form-select" aria-label="Pilih Jabatan Anda"><option value="" disabled="disabled" selected="selected">Pilih Jabatan Anda</option><option value="Guru">Guru</option><option value="Kepala Sekolah">Kepala Sekolah</option><option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option><option value="Pengawas Sekolah">Pengawas Sekolah</option><option value="Tenaga Pendidik Lainnya">Tenaga Pendidik Lainnya</option></select><label for="positionInput">Pilih jabatan sesuai posisi saat ini</label></div><div class="form-floating mb-3 mt-3"><input type="text" id="institutionInput" class="form-control" placeholder="Isi instansi Anda" required><label for="institutionInput">Instansi sesuai tempat bekerja saat ini</label></div><div class="form-floating mb-3 mt-3"><input type="text" id="schoolLevelInput" class="form-control" placeholder="Pilih Jenjang Sekolah" list="schoolLevelList" required><label for="schoolLevelInput">Jenjang Sekolah</label></div><datalist id="schoolLevelList"><option value="Taman Kanak-Kanak (TK)"><option value="Sekolah Dasar (SD)"><option value="Sekolah Menengah Pertama (SMP)"><option value="Sekolah Menengah Atas (SMA)"><option value="Sekolah Menengah Kejuruan (SMK)"><option value="Madrasah Ibtidaiyah (MI)"><option value="Madrasah Tsanawiyah (MTs)"><option value="Madrasah Aliyah (MA)"><option value="Pendidikan Anak Usia Dini (PAUD)"><option value="Sekolah Luar Biasa (SLB)"><option value="Perguruan Tinggi"></datalist><div class="form-floating mb-3 mt-3"><input type="text" id="districtInput" class="form-control" placeholder="Isi kabupaten Anda" required><label for="districtInput">Kabupaten/Kota sesuai wilayah kerja saat ini.</label></div><div class="form-floating mb-3 mt-3"><input type="text" inputmode="numeric" id="whatsappInput" class="form-control" placeholder="0821xxxxxx" required><label for="whatsappInput">Nomor WhatsApp</label></div><hr><div class="form-floating mb-3 mt-3"><input type="text" id="bankNameInput" class="form-control" placeholder="Nama Bank Anda" list="bankList" required><label for="bankNameInput">Nama Bank</label></div><datalist id="bankList"><option value="Bank Negara Indonesia (BNI)"><option value="Bank Rakyat Indonesia (BRI)"><option value="Bank Mandiri"><option value="Bank Tabungan Negara (BTN)"><option value="Bank Syariah Indonesia (BSI)"><option value="Bank Jateng"><option value="Bank BPR"><option value="Bank Central Asia (BCA)"><option value="Bank CIMB Niaga"><option value="Bank Danamon"><option value="Bank Permata"><option value="Bank Panin"><option value="Bank Mega"><option value="Bank OCBC NISP"><option value="Bank Maybank Indonesia"><option value="Bank Sinarmas"><option value="Bank Muamalat"><option value="Bank Bukopin"></datalist><div class="form-floating mb-3 mt-3"><input type="text" inputmode="numeric" id="accountNumberInput" class="form-control" placeholder="Nomor Rekening Anda" required><label for="accountNumberInput">Nomor Rekening</label></div><div class="form-floating mb-3 mt-3"><input type="text" id="accountNameInput" class="form-control" placeholder="Nama Pemilik Rekening" required><label for="accountNameInput">Nama Pemilik Rekening</label></div><button id="nextButton" class="btn btn-primary mt-3 gradient-button fw-bold mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>Lanjut ke Pilih Kegiatan</button></div><div id="step3" class="hidden" style="display:none"><label for="activitySelect" class="form-label">Kegiatan yang akan kamu ikuti :</label><select id="activitySelect" class="form-select mb-3 editable"><option value="" disabled="disabled" selected="selected">Pilih salah satu</option></select><div id="additionalOptions2" style="display:none"><label for="additionalSelect2" class="form-label mt-2">Kegiatan simposium atau seminar :</label><select id="additionalSelect2" class="form-select mb-3 editable"><option value="" disabled="disabled" selected="selected">Pilih salah satu</option><option value="Simposium">Simposium</option><option value="Seminar">Seminar</option></select></div><div id="additionalOptions" style="display:none"><label for="additionalSelect" class="form-label mt-2">Pilih tema Simposium :</label><select id="additionalSelect" class="form-select mb-3 editable"><option value="" disabled="disabled" selected="selected">Pilih salah satu</option><option value="Kemampuan Literasi">Kemampuan Literasi</option><option value="Kemampuan Numerasi">Kemampuan Numerasi</option><option value="Karakter">Karakter</option><option value="Iklim Keamanan Sekolah">Iklim Keamanan Sekolah</option><option value="Iklim Kebhinekaan">Iklim Kebhinekaan</option><option value="Kualitas Pembelajaran">Kualitas Pembelajaran</option></select></div><button id="submitFormButton" class="btn btn-primary gradient-button fw-bold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>Daftar sekarang</button></div></div><div class="card bg-light text-white container formb" hidden><div class="card-body"><div class="px-4 py-5 my-5 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="green" class="bi bi-check-circle-fill" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg><h1 class="display-5 fw-bold text-body-emphasis">Kamu berhasil terdaftar!</h1><div class="col-lg-6 mx-auto"><p class="lead mb-4 text-dark">Sampai jumpa di kegiatan pada acara puncak!</p><div class="d-grid gap-2 d-sm-flex justify-content-sm-center"><a href="https://wa.me/082143168886" target="_blank" type="button" class="btn fw-bold rounded-pill btn-primary px-4gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg>Narahubung</a><a type="button" target="_blank" href="mailto:bbgpjateng@kemdikbud.go.id" class="btn rounded-pill fw-bold btn-outline-primary px-4"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/></svg>Email</a></div></div></div></div></div><div class="formc" hidden><section class="text-white text-center py-5"><div class="container"><h1 class="display-6 text-white fw-bold">Resume Pendaftaran</h1><p class="lead">Terima kasih kakak telah mendaftar!. Festival Transformasi Pendidikan</p></div></section><div class="container cetakboardingpass bg-white p-5 rounded shadow"><h1 class="mb-4 fw-bold">Status Pendaftaran</h1><p class="lead">Festival Transformasi Pendidikan BBGP Jawa Tengah.</p><center><div id="qrcode"></div><button class="btn btn-primary rounded-pill mt-3 fw-bold">Status : Terdaftar</button></center><hr><div class="mt-4"><h5 class="fw-bold">Data Pendaftar:</h5><p>Detail data kakak yang terdaftar.</p><div class="mb-3 form-floating"><input type="text" id="regnuptk" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regnuptk">NUPTK</label></div><div class="mb-3 form-floating"><input type="text" id="regnama" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regnama">Nama Lengkap</label></div><div class="mb-3 form-floating"><input type="text" id="regjabatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regjabatan">Jabatan</label></div><div class="mb-3 form-floating"><input type="text" id="reginstansi" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="reginstansi">Instansi</label></div><div class="mb-3 form-floating"><input type="text" id="regkabupaten" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regkabupaten">Kabupaten</label></div></div><hr><div class="mt-4"><h5 class="fw-bold">Detail Registrasi:</h5><p>Detail kegiatan yang kakak ikuti.</p><div class="mb-3 form-floating"><input type="text" id="regkodeKegiatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regkodeKegiatan">Kode Kegiatan</label></div><div class="mb-3 form-floating"><textarea id="regkegiatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.." style="height:100px"></textarea><label for="regkegiatan">Kegiatan</label></div><div class="mb-3 form-floating"><input type="text" id="regsubKegiatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regsubKegiatan">Sub Kegiatan</label></div><div class="mb-3 form-floating"><input type="text" id="regsubTema" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regsubTema">Sub Tema</label></div><button id="boardingPassButton" class="btn btn-primary mt-3 gradient-button fw-bold mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>Unduh Boarding Pass</button></div><hr><div class="mt-4 formunggah" hidden><h5 class="fw-bold">Detail Naskah:</h5><p>Detail naskah yang kakak unggah.</p><div class="form-floating mb-3 mt-3"><input type="text" id="judulnaskahInput" class="form-control editable" placeholder="Isi judul naskah anda"><label for="judulnaskahInput">Judul Naskah</label><small class="mt-2 help-text">Judul naskah sesuai dengan tema dipilih.</small></div><div class="form-floating mb-3"><input type="text" id="naskahInput" class="form-control editable" placeholder="Isi link google drive naskah anda"><label for="naskahInput">Link Google Drive Naskah Mode View</label><button class="btn btn-outline-primary fw-bold mt-2" id="cekNaskahBtn">Cek Link Naskah</button></div><div class="form-floating mb-3"><input type="text" id="suratInput" class="form-control editable" placeholder="Isi link google drive surat pernyataan anda"><label for="suratInput">Link Google Drive Surat Pernyataan Mode View</label><button class="btn btn-outline-primary fw-bold mt-2 text-left" id="cekSuratBtn">Cek Link Surat</button></div><button id="unggahNaskahButton" class="btn btn-primary fw-bold mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>Unggah Naskah</button></div></div></div><footer class="mt-5 text-center mb-5 text-white">Balai Besar Guru Penggerak Jawa Tengah &copy; 2024 Festival Transformasi Pendidikan</footer></body></html>

@@ -1,1045 +1,175 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Festival Transformasi Pendidikan</title><link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co.com/tmK6GSZ/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://i.ibb.co.com/F7TzwCP/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co.com/D70CCD8/favicon-16x16.png"><meta name="msapplication-TileColor" content="#224679"><meta name="theme-color" content="#ffffff"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script><script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><link rel="manifest" href="data:application/manifest+json,{'name':'Simple PWA','short_name':'PWA','start_url':'/ftp.php','display':'standalone','background_color':'#ffffff','theme_color':'#000000','icons':[{'src':'https://via.placeholder.com/192','sizes':'192x192','type':'image/png'},{'src':'https://via.placeholder.com/512','sizes':'512x512','type':'image/png'}]}"><style>body{font-family:Arial,sans-serif;font-size:14px;padding:20px;text-align:center}helptext{font-size:9px;color:#666}h1{color:#333}</style><script>$(document).ready(function() {
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Festival Transformasi Pendidikan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+  // Set the target date
+  var targetDate = new Date("October 14, 2024 00:00:00").getTime();
 
-      $(document).on("contextmenu", function(event) {
-        event.preventDefault(); // Mencegah menu konteks muncul
-      });
+  // Update the countdown every second
+  var countdownFunction = setInterval(function() {
+    var now = new Date().getTime();
+    var timeLeft = targetDate - now;
 
-      const url = "https://script.google.com/macros/s/AKfycbwvEuVg0otuL2zIRtqPYl6qrvBMF6pAG_PmUSrJ7Ow6jDuijCj8K0-2I55QlLxqZ8DDHA/exec"; // Ganti dengan URL Web App Anda  
+    // Time calculations
+    var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-      // Inisialisasi variabel untuk langkah saat ini
-      let currentStep = 1;
+    // Display the result
+    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " 
+    + minutes + "m " + seconds + "s ";
 
-      // Tampilkan step pertama saat halaman dimuat
-      showStep();
-
-      // Event listener untuk tombol kembali
-      $('#boardingPassButton').on('click', function() {
-        // Ambil elemen yang ingin diubah menjadi gambar (boarding pass)
-        var boardingPass = $('.cetakboardingpass')[0]; // Ambil elemen sebagai DOM
-
-        // Gunakan html2canvas untuk menangkap elemen HTML
-        html2canvas(boardingPass, {
-          scale: 2 // Resolusi tinggi
-        }).then(function(canvas) {
-          // Buat link untuk mengunduh gambar
-          var link = document.createElement('a');
-          link.download = 'boarding_pass.png'; // Nama file gambar
-          link.href = canvas.toDataURL('image/png'); // Konversi canvas ke data URL
-          link.click(); // Simulasi klik untuk mengunduh
-        });
-      });
-
-      function tes() {
-        fetch(url, {
-          redirect: "follow",
-          method: "POST",
-          body: JSON.stringify("DATA"),
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-          },
-        })
+    // If the countdown is finished
+    if (timeLeft < 0) {
+      clearInterval(countdownFunction);
+      document.getElementById("countdown").innerHTML = "Launched!";
+    }
+  }, 1000);
+</script>
+    <link
+      href="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Full screen video background */
+      .video-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -2;
+        object-fit: cover;
       }
-
-      // Fungsi untuk mendapatkan data tema menggunakan fetch
-      function getTema() {
-        const url = 'https://script.google.com/macros/s/AKfycbwvEuVg0otuL2zIRtqPYl6qrvBMF6pAG_PmUSrJ7Ow6jDuijCj8K0-2I55QlLxqZ8DDHA/exec?type=tema';
-
-        // Menggunakan fetch dengan metode GET
-        return fetch(url, {
-            redirect: "follow",
-            method: "GET",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8", // Header sesuai permintaan
-            },
-          })
-          .then(response => response.json()) // Parsing response menjadi JSON
-          .then(data => data.temaData) // Mengembalikan data tema
-          .catch(error => {
-            console.error('Error:', error);
-            swal('Terjadi Kesalahan', 'Gagal mengambil data tema.', 'error');
-            return []; // Kembalikan array kosong jika terjadi error
-          });
+      /* Overlay for dark effect */
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: -1;
       }
-
-      // Event listener menggunakan jQuery untuk select change
-      $('#additionalSelect').on('change', function() {
-        const selectedTema = $(this).val(); // Mendapatkan tema yang dipilih
-
-        // Tampilkan swal loading saat memuat data getTema
-        swal({
-          title: 'Memeriksa Tema',
-          text: 'Sedang menghitung kuota tema, harap tunggu...',
-          icon: 'info',
-          buttons: false, // Tidak ada tombol saat loading
-          closeOnClickOutside: false, // Tidak bisa ditutup dengan klik di luar
-          closeOnEsc: false, // Tidak bisa ditutup dengan Esc
-        });
-
-        // Ambil data tema dari API
-        // Ambil data tema dari API
-        getTema().then(function(temaData) {
-          // Tutup swal loading setelah data diterima
-          swal.close();
-
-          // Cek apakah tema yang dipilih ada di dalam temaData dan apakah total peserta melebihi 300
-          const tema = temaData.find(t => t.tema === selectedTema);
-
-          if (tema && tema.total >= 300) {
-            // Jika total melebihi 300, sembunyikan opsi dan tampilkan pesan
-            swal({
-              icon: 'warning',
-              title: 'Tema Melebihi Batas',
-              text: 'Tema yang Anda pilih sudah melebihi batas peserta. Silakan pilih tema yang lain.',
-              buttons: true,
-              dangerMode: true,
-            }).then((willReset) => {
-              if (willReset) {
-                // Sembunyikan opsi yang dipilih
-                $('#additionalSelect option[value="' + selectedTema + '"]').hide();
-                // Kembalikan ke opsi default "Pilih salah satu"
-                $('#additionalSelect').val(''); // Reset pilihan
-              }
-            });
-          } else {
-            // Jika tema masih tersedia (kurang dari 300), tampilkan swal sukses
-            swal({
-              icon: 'success',
-              title: 'Tema Tersedia',
-              text: 'Tema yang Anda pilih masih memiliki sisa kuota. Segera daftar!',
-              buttons: true,
-            });
-          }
-
-        }).catch(function(error) {
-          // Jika terjadi kesalahan, tutup swal loading dan tampilkan pesan error
-          swal.close();
-          swal({
-            icon: 'error',
-            title: 'Terjadi Kesalahan',
-            text: 'Gagal memuat data tema, silakan coba lagi.',
-          });
-        });
-      });
-
-      // Fungsi untuk menampilkan langkah tertentu dan memperbarui stepper
-      function showStep() {
-        // Sembunyikan semua step
-        $("#step1, #step2, #step3").hide();
-        $(".nav-link").removeClass("active"); // Hapus status aktif dari semua link
-
-        // Menentukan langkah yang aktif
-        if (currentStep === 1) {
-          $("#step1").show();
-          updateStepLink("#step1Link", true, "NUPTK");
-        } else if (currentStep === 2) {
-          $("#step2").show();
-          updateStepLink("#step2Link", true, "PENDAFTAR");
-          updateStepLink("#step1Link", false, "1"); // Menghapus status aktif dari step 1
-        } else if (currentStep === 3) {
-          $("#step3").show();
-          updateStepLink("#step3Link", true, "KEGIATAN");
-          updateStepLink("#step2Link", false, "2"); // Menghapus status aktif dari step 2
-          updateStepLink("#step1Link", false, "1"); // Menghapus status aktif dari step 1
-        }
-      }
-
-      // Fungsi untuk memperbarui status link langkah
-      function updateStepLink(stepId, isActive, label) {
-        $(stepId).toggleClass("active", isActive); // Menetapkan kelas aktif
-        if (isActive) {
-          $(stepId).html(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-check-circle-fill" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg> <span style="color: white;">${label}</span>`
-          );
-        } else {
-          $(stepId).html(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-check-circle-fill" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg> <span style="color: white;"></span>`
-          );
-        }
-      }
-
-      // Fungsi untuk menampilkan data pengguna di halaman (Step 2)
-      function displayUserData(userData) {
-        $("#nameInput").val(userData.nama); // Nama pengguna
-        $(".uname").text(userData.nama); // Nama pengguna
-
-        // Convert the userData.jabatan to lower case for comparison
-        var userJabatan = userData.jabatan.toLowerCase();
-
-        // Loop through the options to find a match
-        $("#positionInput option").each(function() {
-          // Compare the option value in lower case
-          if ($(this).val().toLowerCase() === userJabatan) {
-            $("#positionInput").val($(this).val()); // Set the value if match found
-            return false; // Exit the loop
-          }
-        })
-
-        $("#generationInput").val(userData.peran); // Angkatan atau peran
-        $("#institutionInput").val(userData.instansi); // Instansi (editable)
-        $("#districtInput").val(userData.kabupaten); // Kabupaten        
-
-        // Data mapping jenjang to options
-        const jenjangMap = {
-          "01. PAUD/TK": "Taman Kanak-Kanak (TK)",
-          "02. SD": "Sekolah Dasar (SD)",
-          "03. SMP": "Sekolah Menengah Pertama (SMP)",
-          "04. SMA": "Sekolah Menengah Atas (SMA)",
-          "05. SMK": "Sekolah Menengah Kejuruan (SMK)"
-        };
-
-        // Cek apakah userData.jenjang ada di mapping
-        if (jenjangMap[userData.jenjang]) {
-          $("#schoolLevelInput").val(jenjangMap[userData.jenjang]); // Set input dengan jenjang yang sesuai
-        } else {
-          // Jika jenjang tidak ditemukan, bisa ditambahkan aksi lain misalnya alert atau default value
-          $("#schoolLevelInput").val(''); // Kosongkan input jika tidak cocok
-        }
-
-        // Datalist for Autocomplete
-        const datalistHtml = `
-          <datalist id="schoolLevelList">
-            <option value="Taman Kanak-Kanak (TK)">
-            <option value="Sekolah Dasar (SD)">
-            <option value="Sekolah Menengah Pertama (SMP)">
-            <option value="Sekolah Menengah Atas (SMA)">
-            <option value="Sekolah Menengah Kejuruan (SMK)">
-            <option value="Madrasah Ibtidaiyah (MI)">
-            <option value="Madrasah Tsanawiyah (MTs)">
-            <option value="Madrasah Aliyah (MA)">
-            <option value="Pendidikan Anak Usia Dini (PAUD)">
-            <option value="Sekolah Luar Biasa (SLB)">
-            <option value="Perguruan Tinggi">
-          </datalist>
-        `;
-
-        // Masukkan datalist ke dalam DOM (jika diperlukan)
-        $("#schoolLevelInput").after(datalistHtml);
-
-        // Pastikan inputan tambahan kosong (jika diinginkan)
-        $("#whatsappInput").val(userData.nomor_whatsapp); // Nomor WhatsApp (editable)
-        $("#bankNameInput").val("");
-        $("#accountNumberInput").val("");
-        $("#accountNameInput").val(userData.nama);
-        $("#kodeKegiatanInput").val(userData.jumlah_kegiatan);
-
-        tampilKegiatan(userData.jumlah_kegiatan); // Tampilkan kegiatan yang tersedia
-      }
-
-      // Fungsi untuk menampilkan data registrasi di halaman (Step 2)
-      function displayUserDataRegistrasi(userDataRegistrasi, userData) {
-
-        $("#nameInput").val(userData.nama); // Nama pengguna
-        $(".uname").text(userData.nama); // Nama pengguna
-
-        generateQRCode(userData.nuptk); // Generate QR code
-
-        // Set the value of each input field with the corresponding data from userDataRegistrasi using jQuery
-        $("#regnuptk").val(userData.nuptk || "Inputan otomatis dari sistem");
-        $("#regnama").val(userData.nama || "Inputan otomatis dari sistem");
-        $("#regjabatan").val(userDataRegistrasi.jabatan || "Inputan otomatis dari sistem");
-        $("#reginstansi").val(userDataRegistrasi.instansi || "Inputan otomatis dari sistem");
-        $("#regkabupaten").val(userDataRegistrasi.kabupaten || "Inputan otomatis dari sistem");
-
-        $("#regkodeKegiatan").val(userDataRegistrasi.kodeKegiatan || "Inputan otomatis dari sistem");
-        $("#regkegiatan").val(userDataRegistrasi.kegiatan || "Inputan otomatis dari sistem");
-        $("#regsubKegiatan").val(userDataRegistrasi.subKegiatan || "Inputan otomatis dari sistem");
-        $("#regsubTema").val(userDataRegistrasi.subTema || "Inputan otomatis dari sistem");
-      }
-
-      // Fungsi untuk menampilkan data registrasi habis registrasi di halaman (Step 2)
-      function displayUserDataRegistrasiHabisRegistrasi(nama, nuptk, jabatan, instansi, kabupaten, kodeKegiatan, kegiatan, subKegiatan, subTema) {
-
-        $("#nameInput").val(nama); // Nama pengguna
-        $(".uname").text(nama); // Nama pengguna
-
-        generateQRCode(nuptk); // Generate QR code
-
-        // Set the value of each input field with the corresponding data from userDataRegistrasi using jQuery
-        $("#regnuptk").val(nuptk || "Inputan otomatis dari sistem");
-        $("#regnama").val(nama || "Inputan otomatis dari sistem");
-        $("#regjabatan").val(jabatan || "Inputan otomatis dari sistem");
-        $("#reginstansi").val(instansi || "Inputan otomatis dari sistem");
-        $("#regkabupaten").val(kabupaten || "Inputan otomatis dari sistem");
-
-        $("#regkodeKegiatan").val(kodeKegiatan || "Inputan otomatis dari sistem");
-        $("#regkegiatan").val(kegiatan || "Inputan otomatis dari sistem");
-        $("#regsubKegiatan").val(subKegiatan || "Inputan otomatis dari sistem");
-        $("#regsubTema").val(subTema || "Inputan otomatis dari sistem");
-      }
-
-      // Fungsi untuk menghapus data registrasi di halaman (Step 2)
-      function unggahNaskah() {
-        // Ambil nilai dari input field
-        const NUPTK = $("#regnuptk").val();
-        const judulBaru = $("#judulnaskahInput").val();
-        const naskahBaru = $("#naskahInput").val();
-        const suratKeteranganBaru = $("#suratInput").val();
-
-        // Ganti dengan URL Web App Anda
-        const baseUrl = "https://script.google.com/macros/s/AKfycbwvEuVg0otuL2zIRtqPYl6qrvBMF6pAG_PmUSrJ7Ow6jDuijCj8K0-2I55QlLxqZ8DDHA/exec";
-
-        // Menambahkan parameter judulBaru, naskahBaru, dan suratKeteranganBaru ke dalam URL
-        const url = `${baseUrl}?NUPTK=${encodeURIComponent(NUPTK)}&judulBaru=${encodeURIComponent(judulBaru)}&naskahBaru=${encodeURIComponent(naskahBaru)}&suratKeteranganBaru=${encodeURIComponent(suratKeteranganBaru)}`;
-
-        // Menggunakan fetch API untuk mengirim permintaan GET
-        fetch(url, {
-            redirect: "follow",
-            method: "GET", // Menggunakan metode GET            
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8", // Header sesuai permintaan
-            },
-          })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // Mengharapkan respons JSON
-          })
-          .then((responseData) => {
-            // Log respons untuk debug
-            console.log("Response Data:", responseData);
-
-            if (responseData.status === "error") {
-              console.error(responseData.message);
-              alert(`Error: ${responseData.message}`);
-              return;
-            }
-
-            if (responseData.status === "success") {
-              swal({
-                title: "Berhasil!",
-                text: "Data naskah berhasil diperbarui!",
-                icon: "success", // Ikon "success"
-                button: "Terima kasih, Kak!",
-              });
-            }
-
-          })
-          .catch((error) => {
-            // Log error untuk debug
-            console.error("Terjadi kesalahan:", error);
-            alert("Terjadi kesalahan saat memperbarui data.");
-          });
-      }
-
-      // Fungsi untuk menampilkan kegiatan yang tersedia di dropdown select
-      function tampilKegiatan(jumlahKegiatan) {
-        // Ganti dengan URL Web App Anda
-        const baseUrl = "https://script.google.com/macros/s/AKfycbwvEuVg0otuL2zIRtqPYl6qrvBMF6pAG_PmUSrJ7Ow6jDuijCj8K0-2I55QlLxqZ8DDHA/exec";
-
-        // Menambahkan parameter jumlahKegiatan ke dalam URL
-        const url = `${baseUrl}?kode=${encodeURIComponent(jumlahKegiatan)}`;
-
-        // Menggunakan fetch API untuk mengirim permintaan GET
-        fetch(url, {
-            redirect: "follow",
-            method: "GET", // Menggunakan metode GET            
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8", // Header sesuai permintaan
-            },
-          })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // Mengharapkan respons JSON
-          })
-          .then((responseData) => {
-            // Log respons untuk debug
-            console.log("Data kegiatan:", responseData);
-
-            // Kosongkan dropdown sebelum diisi
-            $("#activitySelect").empty();
-            $("#activitySelect").append('<option value="" disabled selected>Pilih Kegiatan</option>');
-
-            // Cek jika ada kesalahan dalam respons
-            if (responseData.error) {
-              console.error(responseData.error);
-              return;
-            }
-
-            // Tampilkan data kegiatan di dropdown select
-            const kegiatan = responseData.kegiatan || [];
-            kegiatan.forEach(function(activity) {
-              const namaKegiatanArray = activity.nama.split(',').map(k => k.trim());
-
-              namaKegiatanArray.forEach(function(namaKegiatan) {
-                $("#activitySelect").append(
-                  `<option value="${namaKegiatan}">${namaKegiatan} (${activity.timja})</option>`
-                );
-              });
-            });
-          })
-          .catch((error) => {
-            // Log error untuk debug
-            console.error("Terjadi kesalahan:", error);
-          });
-      }
-
-      // Fungsi untuk mengambil data naskah berdasarkan NUPTK dan set ke input
-      function getNaskah(NUPTK) {
-        // Ganti dengan URL Web App Anda
-        const baseUrl = "https://script.google.com/macros/s/AKfycbwvEuVg0otuL2zIRtqPYl6qrvBMF6pAG_PmUSrJ7Ow6jDuijCj8K0-2I55QlLxqZ8DDHA/exec";
-
-        // Menambahkan parameter NUPTK ke dalam URL
-        const url = `${baseUrl}?NUPTK=${encodeURIComponent(NUPTK)}`;
-
-        // Menggunakan fetch API untuk mengirim permintaan GET
-        fetch(url, {
-            redirect: "follow",
-            method: "GET",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
-          })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // Mengharapkan respons JSON
-          })
-          .then((responseData) => {
-            // Cek jika ada kesalahan dalam respons
-            if (responseData.status !== "success") {
-              console.error("Data naskah tidak ditemukan atau terjadi kesalahan.");
-              return;
-            }
-
-            // Tampilkan data naskah di input form
-            const naskahData = responseData;
-
-            // Isi input field dengan data naskah
-            $("#judulnaskahInput").val(naskahData.judulNaskah); // Mengisi input judul naskah
-            $("#naskahInput").val(naskahData.naskah); // Mengisi input naskah
-            $("#suratInput").val(naskahData.suratKeterangan); // Mengisi input surat keterangan
-
-          })
-          .catch((error) => {
-            console.error("Terjadi kesalahan:", error);
-          });
-      }
-
-      // Fungsi format nomor WhatsApp
-      function formatWhatsApp(number) {
-        // Hapus karakter selain angka
-        number = number.replace(/\D/g, '');
-
-        // Cek apakah nomor dimulai dengan 08
-        if (number.startsWith('08')) {
-          // Ganti 08 dengan 62
-          number = '62' + number.slice(1);
-        } else if (!number.startsWith('62')) {
-          // Jika nomor tidak dimulai dengan 62, tambahkan 62 di depan
-          number = '62' + number;
-        }
-
-        // Kembalikan nomor yang telah diformat
-        return number;
-      }
-
-      // Fungsi untuk menghasilkan QR code
-      function generateQRCode(qrtext) {
-        // Clear the previous QR code
-        $('#qrcode').empty();
-
-        // Get the input text
-        var qrText = qrtext;
-
-        // Generate the QR code with custom styles
-        if (qrText) {
-          var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: qrText,
-            width: 200, // QR code width
-            height: 200, // QR code height            
-            correctLevel: QRCode.CorrectLevel.H // Error correction level
-          });
-
-        }
-      }
-
-      // Batasi input hanya angka dan maksimal 16 digit
-      $('#NUPTK').on('input', function() {
-        var value = $(this).val().replace(/[^0-9]/g, ''); // Hanya izinkan angka
-        if (value.length > 16) {
-          value = value.slice(0, 16); // Batasi maksimal 16 digit
-        }
-        $(this).val(value);
-        $("#message")
-          .text("")
-          .addClass("text-red-500");
-      });
-
-      // Validasi NUPTK saat blur
-      $('#NUPTK').on('blur', function() {
-        var value = $(this).val();
-        if (value.length !== 16) {
-          $("#message")
-            .text("NUPTK harus berupa 16 digit angka.")
-            .addClass("text-red-500");
-        }
-      });
-
-      // Step 1: Validasi NUPTK
-      $("#checkButton").click(function() {
-        $("#loading").show(); // Tampilkan spinner loading
-        $("#checkButton").prop("disabled", true).text("Proses Verifikasi...");
-
-        const NUPTK = $("#NUPTK").val();
-
-        // cek nuptk kosong
-        if (NUPTK == "") {
-          swal({
-            title: "Hai, kak!",
-            text: "NUPTK harus lengkap sebelum melanjutkan.",
-            icon: "error", // Bisa "warning", "error", "success", atau "info"
-            button: {
-              text: "Oke, Siap ka!", // Label tombol
-              className: "btn btn-primary", // Menggunakan kelas btn-primary dari Bootstrap 5
-              closeModal: true // Tutup setelah tombol diklik
-            }
-          });
-          $("#loading").hide(); // Sembunyikan spinner
-          $("#checkButton").prop("disabled", false).text("Verifikasi");
-
-
-          return; // Hentikan eksekusi jika NUPTK kosong
-        }
-
-
-        // Kirim NUPTK ke Google Apps Script untuk validasi        
-        const params = {
-          NUPTK: NUPTK,
-        };
-
-        // Tampilkan SweetAlert dengan hitung mundur
-        let countdown = 10;
-        swal({
-          title: "Proses Verifikasi",
-          text: `Kami sedang memverifikasi NUPTK ${NUPTK} (Tunggu hingga : ${countdown} detik)`,
-          icon: "info",
-          buttons: false,
-          closeOnClickOutside: false,
-          closeOnEsc: false,
-        });
-
-        // Mulai hitung mundur setiap 1 detik
-        const countdownInterval = setInterval(function() {
-          countdown--;
-          swal({
-            title: "Proses Verifikasi",
-            text: `Kami sedang memverifikasi NUPTK (Tunggu hingga : ${countdown} detik)`,
-            icon: "info",
-            buttons: false,
-            closeOnClickOutside: false,
-            closeOnEsc: false,
-          });
-
-          // Jika countdown selesai, hentikan interval
-          if (countdown === 0) {
-            clearInterval(countdownInterval);
-          }
-        }, 1000);
-
-        // Menggunakan fetch API untuk mengirim permintaan POST
-        fetch(url, {
-            redirect: "follow",
-            method: "POST",
-            body: JSON.stringify(params), // Data dalam format JSON
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8", // Menggunakan text/plain untuk menghindari masalah CORS
-            },
-          })
-          .then((response) => {
-            $("#loading").hide(); // Sembunyikan spinner
-            $("#checkButton").prop("disabled", false).text("Cek NUPTK");
-
-            clearInterval(countdownInterval); // Hentikan hitung mundur
-
-            // Cek apakah respons berhasil
-            if (!response.ok) {
-              throw new Error("Jaringan bermasalah. Coba lagi nanti.");
-            }
-
-            return response.json(); // Mengubah respons menjadi JSON
-          })
-          .then((response) => {
-            console.log("Respons dari server:", response); // Log respons untuk debug
-
-            // Handle different response statuses
-            if (response.status === "invalid") {
-              swal({
-                title: "NUPTK Tidak Terdaftar",
-                text: "Kakak tidak bisa melanjutkan.",
-                icon: "error",
-                button: {
-                  text: "OK", // Label tombol
-                  className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                  closeModal: true // Tutup swal setelah tombol diklik
-                }
-              }).then(() => {
-                $("#message").text("NUPTK tidak terdaftar. Anda tidak bisa melanjutkan.").addClass("text-red-500");
-                $("#NUPTK").val(""); // Kosongkan input NUPTK
-              });
-
-            } else if (response.status === "registered") {
-
-              getNaskah(NUPTK);
-
-              const userDataRegistrasi = response.userDataRegistrasi; // Ambil data registrasi
-              const userData = response.userData; // Ambil data pengguna
-
-              displayUserDataRegistrasi(userDataRegistrasi, userData); // Menampilkan data pengguna
-
-              swal({
-                title: "NUPTK Sudah Terdaftar",
-                text: "NUPTK sudah terdaftar pada kegiatan " + userDataRegistrasi.kegiatan,
-                icon: "warning",
-                button: {
-                  text: "Lihat detail kegiatan", // Label tombol
-                  className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                  closeModal: true // Tutup swal setelah tombol diklik
-                }
-              }).then(() => {
-                $("#message").text("NUPTK sudah terdaftar untuk kegiatan.").addClass("text-red-500");
-                $(".forma").prop("hidden", true);
-                $(".formc").prop("hidden", false);
-
-                if (userDataRegistrasi.subTema === "Tidak Dipilih") {
-                  $(".formunggah").prop("hidden", true);
-                } else {
-                  $(".formunggah").prop("hidden", false);
-                }
-              });
-
-            } else if (response.status === "valid") {
-              swal({
-                title: "NUPTK Valid",
-                text: "Silakan lanjut ke langkah berikutnya.",
-                icon: "success",
-                button: {
-                  text: "Siap, kakak", // Label tombol
-                  className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                  closeModal: true // Tutup swal setelah tombol diklik
-                }
-              }).then(() => {
-                $("#message").text("NUPTK valid. Silakan lanjut ke langkah berikutnya.").removeClass("text-red-500").addClass("text-green-500");
-
-                const userData = response.userData;
-                displayUserData(userData); // Tampilkan data pengguna
-
-                currentStep = 2;
-                showStep(); // Function to proceed to the next step
-              });
-
-            }
-          })
-          .catch((error) => {
-            $("#loading").hide(); // Sembunyikan spinner
-            $("#checkButton").prop("disabled", false).text("Cek NUPTK");
-
-            clearInterval(countdownInterval); // Hentikan hitung mundur jika ada error
-
-            console.log("Error details:", error); // Log errors
-
-            let errorMessage = "Terjadi kesalahan.";
-            if (error.message.includes("Jaringan bermasalah")) {
-              errorMessage = "Tidak bisa terhubung ke server. Periksa koneksi internet Anda.";
-            }
-
-            swal({
-              title: "Error",
-              text: errorMessage,
-              icon: "error",
-              button: {
-                text: "Siap, kak!", // Label tombol
-                className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                closeModal: true // Tutup swal setelah tombol diklik
-              }
-            });
-
-
-            $("#message").text(errorMessage).addClass("text-red-500");
-          });
-      });
-
-      // Step 2: Lanjutkan ke Pilih Kegiatan
-      $("#nextButton").click(function() {
-
-        // Ambil nilai dari semua input
-        const jenjang = $("#schoolLevelInput").val(); // Jenjang sekolah
-        const position = $("#positionInput").val(); // Get the selected value
-        const institution = $("#institutionInput").val().trim();
-        const district = $("#districtInput").val().trim();
-        const whatsapp = $("#whatsappInput").val().trim();
-        const bankName = $("#bankNameInput").val().trim();
-        const accountNumber = $("#accountNumberInput").val().trim();
-        const accountName = $("#accountNameInput").val().trim();
-
-        // Validasi: Pastikan semua field terisi
-        if (jenjang == "" || position == "" || position == null || !institution || !district || !whatsapp || !bankName || !accountNumber || !accountName) {
-          swal({
-            title: "Hai, kak!",
-            text: "Semua data harus terisi sebelum melanjutkan.",
-            icon: "error",
-            button: {
-              text: "Ok siap", // Label tombol
-              className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-              closeModal: true // Tutup swal setelah tombol diklik
-            }
-          });
-
-          return; // Hentikan eksekusi jika ada field yang kosong
-        }
-
-        // Jika semua field terisi, lanjutkan ke langkah berikutnya
-        currentStep = 3;
-        showStep();
-      });
-
-      // Step 3: Daftar kegiatan
-      $("#submitFormButton").click(function() {
-
-        const selectedActivity = $("#activitySelect").val(); // Kegiatan yang dipilih
-        var subKegiatan = "Tidak Dipilih"; // Tipe kegiatan tambahan (jika ada)
-        var subTema = "Tidak Dipilih"; // Tema kegiatan tambahan (jika ada)
-
-        // Cek jika "Simposium Berbagi Praktik Baik Prakarsa Perubahan" dipilih
-        if (selectedActivity === 'Simposium Berbagi Praktik Baik Prakarsa Perubahan') {
-          // Tampilkan opsi tambahan
-          subKegiatan = $("#additionalSelect2").val() || subKegiatan; // Ambil tipe kegiatan tambahan (jika ada)
-          subTema = $("#additionalSelect").val() || subTema; // Ambil tipe tema kegiatan tambahan (jika ada)
-        }
-
-        const NUPTK = $("#NUPTK").val(); // NUPTK yang diinputkan
-        const jabatan = $("#positionInput").val(); // Jabatan dari input
-        const instansi = $("#institutionInput").val(); // Ambil instansi dari input
-        const jenjang = $("#schoolLevelInput").val(); // Ambil jenjang sekolah dari input
-        const kabupaten = $("#districtInput").val(); // Ambil kabupaten dari input
-        const whatsapp = formatWhatsApp($("#whatsappInput").val()); // Ambil nomor WhatsApp dari input
-        const bankName = $("#bankNameInput").val(); // Ambil nama bank dari input
-        const accountNumber = $("#accountNumberInput").val(); // Ambil nomor rekening dari input
-        const accountName = $("#accountNameInput").val(); // Ambil atas nama rekening dari input
-        const kodeKegiatan = $("#kodeKegiatanInput").val(); // Ambil kode kegiatan (misalnya dari input)
-
-        displayUserDataRegistrasiHabisRegistrasi($("#nameInput").val(), NUPTK, jabatan, instansi, kabupaten, kodeKegiatan, selectedActivity, subKegiatan, subTema);
-
-        // Membangun data yang akan dikirim
-        const params = {
-          NUPTK: NUPTK,
-          activity: selectedActivity,
-          jabatan: jabatan,
-          instansi: instansi,
-          jenjang: jenjang,
-          kabupaten: kabupaten,
-          whatsapp: whatsapp,
-          bankName: bankName,
-          accountNumber: accountNumber,
-          accountName: accountName,
-          kode: kodeKegiatan, // Jika ada input untuk kode kegiatan
-          subKegiatan: subKegiatan, // Jika ada input untuk tipe kegiatan tambahan
-          subTema: subTema // Jika ada input untuk tema kegiatan tambahan
-        };
-
-        // Tampilkan SweetAlert dengan hitung mundur 10 detik
-        let countdown = 10;
-        swal({
-          title: "Menunggu Memproses Pendaftaran",
-          text: `Kami sedang memproses pendaftaran.. (Tunggu hingga: ${countdown} detik)`,
-          icon: "info",
-          buttons: false,
-          closeOnClickOutside: false,
-          closeOnEsc: false,
-        });
-
-        const countdownInterval = setInterval(function() {
-          countdown--;
-          swal({
-            title: "Menunggu Proses Pendaftaran",
-            text: `Kami sedang memproses pendaftaran.. (Tunggu hingga: ${countdown} detik)`,
-            icon: "info",
-            buttons: false,
-            closeOnClickOutside: false,
-            closeOnEsc: false,
-          });
-
-          // Jika countdown selesai, hentikan interval
-          if (countdown === 0) {
-            clearInterval(countdownInterval);
-          }
-        }, 1000);
-
-        // Kirim data pendaftaran menggunakan fetch
-        fetch(url, {
-            redirect: "follow",
-            method: "POST",
-            body: JSON.stringify(params), // Data dalam format JSON
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8", // Menggunakan text/plain untuk menghindari masalah CORS
-            },
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // Mengharapkan respons dalam format JSON
-          })
-          .then(response => {
-            clearInterval(countdownInterval); // Hentikan hitung mundur jika respons diterima
-
-            // Hapus spinner dan kembalikan tombol ke status awal
-            $("#submitFormButton").prop("disabled", false).text("Daftar");
-
-            // Menangani respons dari server
-            if (response.status === "success") {
-              swal({
-                title: "Pendaftaran Berhasil, Kak!",
-                text: response.message,
-                icon: "success",
-                button: {
-                  text: "Siap terima kasih", // Label tombol
-                  className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                  closeModal: true // Tutup swal setelah tombol diklik
-                }
-              }).then(() => {
-                $(".forma").prop("hidden", true); // Menyembunyikan Form A
-                $(".formb").prop("hidden", false); // Menampilkan Form B
-                $(".formc").prop("hidden", false); // Menampilkan Form C  
-
-                generateQRCode(NUPTK); // Generate QR code
-
-                // Tampilkan dropdown tema simposium jika tipe kegiatan adalah "Simposium"
-                if (subKegiatan === "Simposium") {
-                  $(".formunggah").prop("hidden", false); // Menampilkan Form C              
-                }
-
-                $("#message")
-                  .text(response.message)
-                  .addClass("text-green-500")
-                  .removeClass("text-muted");
-              });
-
-            } else {
-              swal({
-                title: "Pendaftaran Gagal, Kak!",
-                text: "Kakak hanya boleh mendaftar 1 kegiatan, ya!",
-                icon: "error",
-                button: {
-                  text: "Siap kak!", // Label tombol
-                  className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                  closeModal: true // Tutup swal setelah tombol diklik
-                }
-              }).then(() => {
-                $("#message")
-                  .text("Pendaftaran gagal.")
-                  .addClass("text-danger")
-                  .removeClass("text-muted");
-              });
-
-            }
-          })
-          .catch(error => {
-            clearInterval(countdownInterval); // Hentikan hitung mundur jika ada error
-
-            // Hapus spinner dan kembalikan tombol ke status awal
-            $("#submitFormButton").prop("disabled", false).text("Daftar sekarang");
-            swal({
-              title: "Terjadi Kesalahan, Kak!",
-              text: "Coba mendaftar lagi, kakak.",
-              icon: "error",
-              button: {
-                text: "OK", // Label tombol
-                className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-                closeModal: true // Tutup swal setelah tombol diklik
-              }
-            }).then(() => {
-              $("#message")
-                .text("Terjadi kesalahan: " + error.message)
-                .addClass("text-danger")
-                .removeClass("text-muted");
-            });
-
-          });
-      });
-
-      // Step 4: Unggah Naskah
-      $("#unggahNaskahButton").click(function() {
-
-        // cek jika empty
-        if ($("#judulnaskahInput").val() == "" || $("#naskahInput").val() == "" || $("#suratInput").val() == "") {
-          swal({
-            title: "Hai, kak!",
-            text: "Semua data naskah harus terisi sebelum mengunggah.",
-            icon: "error",
-            button: {
-              text: "Ok siap", // Label tombol
-              className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-              closeModal: true // Tutup swal setelah tombol diklik
-            }
-          });
-
-          return; // Hentikan eksekusi jika ada field yang kosong
-
-        } else {
-
-          unggahNaskah();
-        }
-
-      });
-
-      // Fungsi untuk membatasi input hanya angka
-      $('#whatsappInput').on('input', function() {
-        var value = $(this).val().replace(/[^0-9]/g, ''); // Hanya izinkan angka
-        if (value.length > 0 && value[0] !== '0') {
-          value = '0' + value.slice(1); // Pastikan dimulai dengan 0
-        }
-        $(this).val(value);
-      });
-
-      // Fungsi untuk membatasi input hanya angka
-      $('#accountNumberInput').on('input', function() {
-        // Hapus karakter yang bukan angka
-        this.value = this.value.replace(/[^0-9]/g, '');
-      });
-
-      // Fungsi untuk membuka link naskah menggunakan jQuery    
-      $('#cekNaskahBtn').on('click', function() {
-        const naskahLink = $('#naskahInput').val(); // Mendapatkan nilai dari input dengan jQuery
-        if (naskahLink) {
-          // Membuka link di tab baru
-          window.open(naskahLink, '_blank');
-        } else {
-          // Menggunakan SweetAlert untuk menampilkan pesan kesalahan
-          swal({
-            title: "Link Tidak Ditemukan!",
-            text: "Harap masukkan link naskah terlebih dahulu.",
-            icon: "warning",
-            button: {
-              text: "OK", // Label tombol
-              className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-              closeModal: true // Tutup swal setelah tombol diklik
-            }
-          });
-
-        }
-      });
-
-      // Fungsi untuk membuka link surat pernyataan
-      $('#cekSuratBtn').on('click', function() {
-        const suratLink = $('#suratInput').val();
-        if (suratLink) {
-          // Membuka link di tab baru
-          window.open(suratLink, '_blank');
-        } else {
-          // Menggunakan SweetAlert untuk menampilkan pesan jika link tidak ada
-          swal({
-            title: "Link Tidak Ditemukan!",
-            text: "Harap masukkan link surat pernyataan terlebih dahulu.",
-            icon: "warning",
-            button: {
-              text: "OK, kak!", // Label tombol
-              className: "btn btn-primary", // Menggunakan kelas btn-primary Bootstrap 5
-              closeModal: true // Tutup swal setelah tombol diklik
-            }
-          });
-
-        }
-      });
-
-      // Fungsi untuk menampilkan data kegiatan berdasarkan NUPTK
-      const activities = [{
-          nama: 'Simposium Berbagi Praktik Baik Prakarsa Perubahan'
-        },
-        {
-          nama: 'Gebyar Implementasi Kurikulum Merdeka (IKM)'
-        },
-        {
-          nama: 'BBB'
-        },
-        {
-          nama: 'Pedagogik'
-        }
-        // Tambahkan kegiatan lainnya
-      ];
-
-      // Isi select dengan kegiatan dinamis
-      activities.forEach(function(activity) {
-        $("#activitySelect").append(
-          `<option value="${activity.nama}">${activity.nama}</option>`
-        );
-      });
-
-      // Ketika kegiatan dipilih
-      $("#activitySelect").change(function() {
-        const selectedActivity = $(this).val();
-
-        // Cek jika "Simposium Berbagi Praktik Baik Prakarsa Perubahan" dipilih
-        if (selectedActivity === 'Simposium Berbagi Praktik Baik Prakarsa Perubahan') {
-          // Tampilkan opsi tambahan
-          $("#additionalOptions2").show();
-          $("#additionalSelect2").val("");
-          $("#additionalSelect").val("");
-        } else {
-          // Sembunyikan opsi tambahan jika kegiatan lain dipilih
-          $("#additionalOptions").hide();
-          $("#additionalSelect2").val("");
-          $("#additionalSelect").val("");
-          $("#additionalOptions2").hide();
-        }
-      });
-
-      // Event handler untuk dropdown tipe kegiatan
-      $("#additionalSelect2").change(function() {
-        const selectedType = $(this).val();
-
-        // Tampilkan dropdown tema simposium jika tipe kegiatan adalah "Simposium"
-        if (selectedType === "Simposium") {
-          $("#additionalOptions").show();
-        } else {
-          $("#additionalOptions").hide();
-          $("#additionalSelect").val("");
-        }
-      });
-
-    });</script><script type="module">// Import the functions you need from the SDKs you need
-
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-
-    import {
-      getAnalytics
-    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
-
-    // TODO: Add SDKs for Firebase products that you want to use
-
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-
-    // Your web app's Firebase configuration
-
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
-    const firebaseConfig = {
-
-      apiKey: "AIzaSyDeS5BadrSYII-myCE2ff1Zaj7lYTd2Jxo",
-
-      authDomain: "festivaltransformasipendidikan.firebaseapp.com",
-
-      projectId: "festivaltransformasipendidikan",
-
-      storageBucket: "festivaltransformasipendidikan.appspot.com",
-
-      messagingSenderId: "656801924157",
-
-      appId: "1:656801924157:web:699c202614dc0658599654",
-
-      measurementId: "G-CD00CT495M"
-
-    };
-
-
-    // Initialize Firebase
-
-    const app = initializeApp(firebaseConfig);
-
-    const analytics = getAnalytics(app);</script><style>#stepper{display:flex;justify-content:center;list-style-type:none;padding:0}#stepper .nav-item{margin:2px}#stepper .nav-link{display:inline-flex;align-items:center;padding:5px 10px;border-radius:5px;background-color:#007bff;color:#fff;text-decoration:none}#stepper .nav-link svg{margin-right:2px}#stepper .nav-link.disabled{background-color:#6c757d;cursor:not-allowed}#stepper .nav-link{display:inline-flex;align-items:center;padding:10px 20px;border-radius:5px;background-color:#007bff;color:#fff;text-decoration:none;font-size:9px}#stepper .nav-link svg{margin-right:8px;width:14px;height:14px}</style></head><body class="bg-primary"><div class="header-container container mb-3"><a target="_blank" href="https://bbgpjateng.kemdikbud.go.id/"><img src="https://i.ibb.co.com/xf7zM5g/TULISAN-BBGP-3-1.png" width="45%" alt="bbgpjateng" border="0"></a><div class="mt-3"><span class="text-white">Hai kak,</span><span class="fw-bold uname text-white">Selamat datang</span></div></div><div class="container p-5 bg-light rounded shadow forma"><h1 class="mb-4 fw-bold h3 text-dark">Festival Transformasi Pendidikan</h1><input type="text" id="kodeKegiatanInput" hidden><ul class="nav nav-pills mb-4" id="stepper"><li class="nav-item"><a class="nav-link active fw-bold text-white" id="step1Link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/></svg></a></li><li class="nav-item"><a class="nav-link disabled fw-bold text-white h6" id="step2Link" href="#" tabindex="-1" aria-disabled="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-badge-fill" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"/></svg></a></li><li class="nav-item"><a class="nav-link disabled fw-bold text-white" id="step3Link" href="#" tabindex="-1" aria-disabled="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-dash-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6 6a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1z"/></svg></a></li></ul><div id="step1"><label for="NUPTK" class="form-label">Masukkan ID Pendaftaran (NUPTK/NIK)</label><div class="form-floating mb-3"><input type="text" inputmode="numeric" id="NUPTK" required class="form-control" placeholder="NUPTK"><label for="NUPTK">NUPTK</label><div class="input-group-append mt-2"><div class="d-grid gap-2"><button id="checkButton" class="btn btn-primary gradient-button fw-bold" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/></svg>Verifikasi</button></div></div><small class="mt-5 text-muted">Jika tidak punya NUPTK bisa menggunakan NIK</small></div><p id="message" class="mt-3"></p><div id="loading" class="text-muted mt-2"></div></div><div id="step2" class="hidden text-left" style="display:none"><div class="form-floating mb-3"><input type="text" class="form-control" id="nameInput" placeholder="Nama Lengkap" disabled="disabled" value="Nama tidak bisa diedit"><label for="nameInput">Nama Lengkap</label></div><div class="form-floating mb-3"><input type="text" class="form-control" id="generationInput" placeholder="Peran" disabled="disabled" value="Peran"><label for="generationInput">Peran</label></div><hr><div class="form-floating mb-3"><select id="positionInput" class="form-select" aria-label="Pilih Jabatan Anda"><option value="" disabled="disabled" selected="selected">Pilih Jabatan Anda</option><option value="Guru">Guru</option><option value="Kepala Sekolah">Kepala Sekolah</option><option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option><option value="Pengawas Sekolah">Pengawas Sekolah</option><option value="Tenaga Pendidik Lainnya">Tenaga Pendidik Lainnya</option></select><label for="positionInput">Pilih jabatan sesuai posisi saat ini</label></div><div class="form-floating mb-3 mt-3"><input type="text" id="institutionInput" class="form-control" placeholder="Isi instansi Anda" required><label for="institutionInput">Instansi sesuai tempat bekerja saat ini</label></div><div class="form-floating mb-3 mt-3"><input type="text" id="schoolLevelInput" class="form-control" placeholder="Pilih Jenjang Sekolah" list="schoolLevelList" required><label for="schoolLevelInput">Jenjang Sekolah</label></div><datalist id="schoolLevelList"><option value="Taman Kanak-Kanak (TK)"><option value="Sekolah Dasar (SD)"><option value="Sekolah Menengah Pertama (SMP)"><option value="Sekolah Menengah Atas (SMA)"><option value="Sekolah Menengah Kejuruan (SMK)"><option value="Madrasah Ibtidaiyah (MI)"><option value="Madrasah Tsanawiyah (MTs)"><option value="Madrasah Aliyah (MA)"><option value="Pendidikan Anak Usia Dini (PAUD)"><option value="Sekolah Luar Biasa (SLB)"><option value="Perguruan Tinggi"></datalist><div class="form-floating mb-3 mt-3"><input type="text" id="districtInput" class="form-control" placeholder="Isi kabupaten Anda" required><label for="districtInput">Kabupaten/Kota sesuai wilayah kerja saat ini.</label></div><div class="form-floating mb-3 mt-3"><input type="text" inputmode="numeric" id="whatsappInput" class="form-control" placeholder="0821xxxxxx" required><label for="whatsappInput">Nomor WhatsApp</label></div><hr><div class="form-floating mb-3 mt-3"><input type="text" id="bankNameInput" class="form-control" placeholder="Nama Bank Anda" list="bankList" required><label for="bankNameInput">Nama Bank</label></div><datalist id="bankList"><option value="Bank Negara Indonesia (BNI)"><option value="Bank Rakyat Indonesia (BRI)"><option value="Bank Mandiri"><option value="Bank Tabungan Negara (BTN)"><option value="Bank Syariah Indonesia (BSI)"><option value="Bank Jateng"><option value="Bank BPR"><option value="Bank Central Asia (BCA)"><option value="Bank CIMB Niaga"><option value="Bank Danamon"><option value="Bank Permata"><option value="Bank Panin"><option value="Bank Mega"><option value="Bank OCBC NISP"><option value="Bank Maybank Indonesia"><option value="Bank Sinarmas"><option value="Bank Muamalat"><option value="Bank Bukopin"></datalist><div class="form-floating mb-3 mt-3"><input type="text" inputmode="numeric" id="accountNumberInput" class="form-control" placeholder="Nomor Rekening Anda" required><label for="accountNumberInput">Nomor Rekening</label></div><div class="form-floating mb-3 mt-3"><input type="text" id="accountNameInput" class="form-control" placeholder="Nama Pemilik Rekening" required><label for="accountNameInput">Nama Pemilik Rekening</label></div><button id="nextButton" class="btn btn-primary mt-3 gradient-button fw-bold mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>Lanjut ke Pilih Kegiatan</button></div><div id="step3" class="hidden" style="display:none"><label for="activitySelect" class="form-label">Kegiatan yang akan kamu ikuti :</label><select id="activitySelect" class="form-select mb-3 editable"><option value="" disabled="disabled" selected="selected">Pilih salah satu</option></select><div id="additionalOptions2" style="display:none"><label for="additionalSelect2" class="form-label mt-2">Kegiatan simposium atau seminar :</label><select id="additionalSelect2" class="form-select mb-3 editable"><option value="" disabled="disabled" selected="selected">Pilih salah satu</option><option value="Simposium">Simposium</option><option value="Seminar">Seminar</option></select></div><div id="additionalOptions" style="display:none"><label for="additionalSelect" class="form-label mt-2">Pilih tema Simposium :</label><select id="additionalSelect" class="form-select mb-3 editable"><option value="" disabled="disabled" selected="selected">Pilih salah satu</option><option value="Kemampuan Literasi">Kemampuan Literasi</option><option value="Kemampuan Numerasi">Kemampuan Numerasi</option><option value="Karakter">Karakter</option><option value="Iklim Keamanan Sekolah">Iklim Keamanan Sekolah</option><option value="Iklim Kebhinekaan">Iklim Kebhinekaan</option><option value="Kualitas Pembelajaran">Kualitas Pembelajaran</option></select></div><button id="submitFormButton" class="btn btn-primary gradient-button fw-bold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>Daftar sekarang</button></div></div><div class="card bg-light text-white container formb" hidden><div class="card-body"><div class="px-4 py-5 my-5 text-center"><svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="green" class="bi bi-check-circle-fill" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg><h1 class="display-5 fw-bold text-body-emphasis">Kamu berhasil terdaftar!</h1><div class="col-lg-6 mx-auto"><p class="lead mb-4 text-dark">Sampai jumpa di kegiatan pada acara puncak!</p><div class="d-grid gap-2 d-sm-flex justify-content-sm-center"><a href="https://wa.me/082143168886" target="_blank" type="button" class="btn fw-bold rounded-pill btn-primary px-4gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg>Narahubung</a><a type="button" target="_blank" href="mailto:bbgpjateng@kemdikbud.go.id" class="btn rounded-pill fw-bold btn-outline-primary px-4"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/></svg>Email</a></div></div></div></div></div><div class="formc" hidden><section class="text-white text-center py-5"><div class="container"><h1 class="display-6 text-white fw-bold">Resume Pendaftaran</h1><p class="lead">Terima kasih kakak telah mendaftar!. Festival Transformasi Pendidikan</p></div></section><div class="container cetakboardingpass bg-white p-5 rounded shadow"><h1 class="mb-4 fw-bold">Status Pendaftaran</h1><p class="lead">Festival Transformasi Pendidikan BBGP Jawa Tengah.</p><center><div id="qrcode"></div><button class="btn btn-primary rounded-pill mt-3 fw-bold">Status : Terdaftar</button></center><hr><div class="mt-4"><h5 class="fw-bold">Data Pendaftar:</h5><p>Detail data kakak yang terdaftar.</p><div class="mb-3 form-floating"><input type="text" id="regnuptk" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regnuptk">NUPTK</label></div><div class="mb-3 form-floating"><input type="text" id="regnama" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regnama">Nama Lengkap</label></div><div class="mb-3 form-floating"><input type="text" id="regjabatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regjabatan">Jabatan</label></div><div class="mb-3 form-floating"><input type="text" id="reginstansi" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="reginstansi">Instansi</label></div><div class="mb-3 form-floating"><input type="text" id="regkabupaten" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regkabupaten">Kabupaten</label></div></div><hr><div class="mt-4"><h5 class="fw-bold">Detail Registrasi:</h5><p>Detail kegiatan yang kakak ikuti.</p><div class="mb-3 form-floating"><input type="text" id="regkodeKegiatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regkodeKegiatan">Kode Kegiatan</label></div><div class="mb-3 form-floating"><textarea id="regkegiatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.." style="height:100px"></textarea><label for="regkegiatan">Kegiatan</label></div><div class="mb-3 form-floating"><input type="text" id="regsubKegiatan" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regsubKegiatan">Sub Kegiatan</label></div><div class="mb-3 form-floating"><input type="text" id="regsubTema" class="form-control non-editable" disabled="disabled" placeholder="Inputan otomatis anda tidak perlu mengisi.."><label for="regsubTema">Sub Tema</label></div><button id="boardingPassButton" class="btn btn-primary mt-3 gradient-button fw-bold mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/></svg>Unduh Boarding Pass</button></div><hr><div class="mt-4 formunggah" hidden><h5 class="fw-bold">Detail Naskah:</h5><p>Detail naskah yang kakak unggah.</p><div class="form-floating mb-3 mt-3"><input type="text" id="judulnaskahInput" class="form-control editable" placeholder="Isi judul naskah anda"><label for="judulnaskahInput">Judul Naskah</label><small class="mt-2 help-text">Judul naskah sesuai dengan tema dipilih.</small></div><div class="form-floating mb-3"><input type="text" id="naskahInput" class="form-control editable" placeholder="Isi link google drive naskah anda"><label for="naskahInput">Link Google Drive Naskah Mode View</label><button class="btn btn-outline-primary fw-bold mt-2" id="cekNaskahBtn">Cek Link Naskah</button></div><div class="form-floating mb-3"><input type="text" id="suratInput" class="form-control editable" placeholder="Isi link google drive surat pernyataan anda"><label for="suratInput">Link Google Drive Surat Pernyataan Mode View</label><button class="btn btn-outline-primary fw-bold mt-2 text-left" id="cekSuratBtn">Cek Link Surat</button></div><button id="unggahNaskahButton" class="btn btn-primary fw-bold mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/></svg>Unggah Naskah</button></div></div></div><footer class="mt-5 text-center mb-5 text-white">Balai Besar Guru Penggerak Jawa Tengah &copy; 2024 Festival Transformasi Pendidikan</footer></body></html>
+    </style>
+  </head>
+  <body class="relative">
+   
+    </div>
+
+    <!-- Content -->
+    <div
+      class="min-h-screen flex flex-col items-center justify-center z-10 relative"
+    >
+      <div class="text-center space-y-8">
+       <!-- Logo -->
+
+<div>
+        <img class="h-auto max-w-full rounded-lg" src="https://bbgpjateng.kemdikbud.go.id/assets/uploads/media-uploader/logo-bbgp-jawa-tengah-new-warna1683098302.png" alt="">
+    </div>
+
+<!-- Title -->
+<h1 class="text-4xl md:text-6xl font-bold tracking-tight">
+  Festival Transformasi Pendidikan
+</h1>
+        <p class="text-lg md:text-2xl mt-4">
+          Segera dibuka! Siapkan diri, kakak!
+        </p>
+
+        <!-- Countdown -->
+<div class="flex justify-center">
+  <div class="bg-gray-800 py-4 px-8 rounded-lg">
+    <p id="countdown" class="text-xl text-gray-400">Loading...</p>
+  </div>
+</div>
+
+        <!-- Social Media Icons (Rounded) -->
+        <div class="flex justify-center space-x-6 mt-8">
+          <a
+            href="https://instagram.com/bbgpjateng"
+            class="bg-gray-700 p-3 rounded-full text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.328 3.608 1.302.975.975 1.24 2.242 1.302 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.328 2.633-1.302 3.608-.975.975-2.242 1.24-3.608 1.302-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.328-3.608-1.302-.975-.975-1.24-2.242-1.302-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.328-2.633 1.302-3.608.975-.975 2.242-1.24 3.608-1.302C8.416 2.175 8.796 2.163 12 2.163M12 0C8.741 0 8.332.014 7.052.072 5.775.129 4.506.38 3.446 1.44 2.385 2.501 2.134 3.771 2.077 5.048 2.019 6.328 2.006 6.737 2.006 10s.013 3.672.071 4.952c.057 1.277.308 2.547 1.369 3.608 1.06 1.061 2.33 1.312 3.607 1.369 1.28.058 1.69.071 4.951.071s3.672-.013 4.952-.071c1.277-.057 2.547-.308 3.608-1.369 1.061-1.06 1.312-2.33 1.369-3.607.058-1.28.071-1.69.071-4.951s-.013-3.672-.071-4.952c-.057-1.277-.308-2.547-1.369-3.608C19.547.38 18.277.129 17 .072 15.721.014 15.311 0 12 0zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845a1.44 1.44 0 1 1 0-2.88 1.44 1.44 0 0 1 0 2.88z"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://twitter.com/bbgpjateng"
+            class="bg-gray-700 p-3 rounded-full text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M23.954 4.569c-.885.392-1.83.656-2.825.775a4.932 4.932 0 0 0 2.163-2.724 9.864 9.864 0 0 1-3.127 1.195 4.916 4.916 0 0 0-8.384 4.482A13.95 13.95 0 0 1 1.671 3.149a4.918 4.918 0 0 0 1.523 6.573 4.902 4.902 0 0 1-2.228-.616c-.054 2.281 1.581 4.415 3.946 4.89a4.935 4.935 0 0 1-2.224.085 4.93 4.93 0 0 0 4.6 3.419 9.868 9.868 0 0 1-6.102 2.105c-.397 0-.788-.023-1.175-.067a13.945 13.945 0 0 0 7.548 2.211c9.057 0 14.01-7.513 14.01-14.01 0-.214-.005-.428-.014-.641A10.025 10.025 0 0 0 24 4.59z"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://facebook.com/bbgpjateng"
+            class="bg-gray-700 p-3 rounded-full text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M22.676 0H1.326C.593 0 0 .594 0 1.326v21.348C0 23.406.594 24 1.326 24h11.49v-9.294H9.847v-3.418h2.969V8.414c0-2.938 1.794-4.539 4.415-4.539 1.255 0 2.336.093 2.65.135v3.073h-1.818c-1.429 0-1.705.678-1.705 1.673v2.194h3.416l-.445 3.418h-2.971V24h5.825c.732 0 1.326-.594 1.326-1.326V1.326C24 .593 23.406 0 22.676 0z"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://youtube.com/@bbgpjateng"
+            class="bg-gray-700 p-3 rounded-full text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M23.498 6.186a2.978 2.978 0 0 0-2.095-2.118C19.522 3.684 12 3.684 12 3.684s-7.522 0-9.403.384a2.979 2.979 0 0 0-2.095 2.118 29.01 29.01 0 0 0-.502 5.307c-.012 1.821-.012 3.641.001 5.462a29.015 29.015 0 0 0 .502 5.307 2.978 2.978 0 0 0 2.095 2.118c1.88.384 9.403.384 9.403.384s7.522 0 9.403-.384a2.978 2.978 0 0 0 2.095-2.118 29.051 29.051 0 0 0 .502-5.307c.012-1.821.012-3.641-.001-5.462a29.054 29.054 0 0 0-.502-5.307zm-13.498 9.361V8.453l6.25 3.547-6.25 3.547z"
+              />
+            </svg>
+          </a>
+          <a
+            href="https://tiktok.com/@bbgpjateng"
+            class="bg-gray-700 p-3 rounded-full text-gray-400 hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.755 8.49c-1.335.09-2.407-.85-2.407-2.188h-.003v-.023h-1.91v8.898c0 1.424-1.153 2.578-2.576 2.578a2.581 2.581 0 0 1-1.483-4.672 2.522 2.522 0 0 0-.748-.117c-1.426 0-2.579 1.153-2.579 2.578 0 1.424 1.153 2.578 2.579 2.578 1.424 0 2.578-1.154 2.578-2.578V7.587c1.083.813 2.437 1.302 3.899 1.302v-.399z"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.js"></script>
+  </body>
+</html>
